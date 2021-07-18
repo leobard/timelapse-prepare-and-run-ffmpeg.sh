@@ -1,3 +1,5 @@
+#!/bin/bash
+<<'###BLOCK-COMMENT'
 # timelapse-prepare-and-run-ffmpeg.sh
 This bash script makes a time lapse video and according subtitle file with timestamps based on date-named JPG files using ffmpeg.
 Input is the current directory, all JPG files are processed in order of filename alphabetically.
@@ -56,3 +58,44 @@ Example of a block of the resulting SRT:
 2021-05-17 00:25
 
 ```
+
+###BLOCK-COMMENT
+
+
+echo "Preparing lists.txt and subtitles.srt. This takes a while because of awk invocation for floating-point addition..."
+# frame number = subtitle number
+frame=1
+# subtitle start in sec (msec as decimal fraction)
+fstart=0.0
+rm list.txt
+rm subtitles.srt
+for f in *.jpg; do 
+	# create both the input for ffmpeg and the subtitle file with the filenames
+    # https://trac.ffmpeg.org/wiki/Concatenate
+	echo "file '$f'" >> list.txt
+	
+	# No floating point in bash - but in awk. invocation takes ages. todo: rewrite to integer math.
+	fend=$(echo $fstart 0.04 | awk '{ printf "%f", $1 + $2 }')
+		
+	datepart=${f:0:10}
+	hourpart=${f:11:2}
+	minutepart=${f:13:2}
+	
+	fstartstr=$(date -d@$fstart -u +%H:%M:%S,%3N)
+	fendstr=$(date -d@$fend -u +%H:%M:%S,%3N)
+	
+	printf "%i\n%s --> %s\n%s %s:%s\n\n" $frame $fstartstr $fendstr $datepart $hourpart $minutepart >> subtitles.srt
+	
+	# increase counters
+	let frame=$frame+1
+	fstart=$fend
+done
+
+echo "Written list.txt and subtitles.srt"
+
+
+echo "Running ffmpeg now"
+rm video.mp4
+ffmpeg -f concat -i list.txt -c:v libx264 -pix_fmt yuv420p video.mp4
+rm video1080.mp4
+ffmpeg -f concat -i list.txt -c:v libx264 -pix_fmt yuv420p -vf scale=-4:1080 video1080.mp4
