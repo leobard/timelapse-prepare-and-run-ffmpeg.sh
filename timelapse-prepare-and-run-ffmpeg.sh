@@ -9,13 +9,13 @@ Output are
 - one subtitle file containing time for each frame: subtitles.srt 
 
 
----
+```yaml
 name    : timelapse-prepare-and-run-ffmpeg.sh
 author  : leo sauermann
 date    : 2021-05
 license : https://opensource.org/licenses/MIT
 seeAlso : https://github.com/leobard/timelapse-prepare-and-run-ffmpeg.sh
----
+```
 
 
 # Running
@@ -35,10 +35,13 @@ example beginnings of filenames:
 
 
 How to rename a directory of photos from `IMG001.JPG` to above:
+
+cmd.exe version:
 ```cmd.exe
 exiftool "-FileName<${datetimeoriginal}${subsectimeoriginal}%-c.%e" -d %Y-%m-%d_%H%M%S . 
 ```
 
+bash version:
 ```bash
 exiftool '-FileName<${datetimeoriginal}${subsectimeoriginal}%-c.%e' -d %Y-%m-%d_%H%M%S . 
 ```
