@@ -1,0 +1,2 @@
+# bash scripts want lf
+*.sln text eol=lf
