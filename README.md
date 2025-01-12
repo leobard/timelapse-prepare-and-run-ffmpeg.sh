@@ -1,10 +1,7 @@
 # timelapse-prepare-and-run-ffmpeg.sh
-This bash script makes a time lapse video and according subtitle file with timestamps based on date-named JPG files using ffmpeg.
+This bash script makes a 25 fps time lapse video and according subtitle file with timestamps based on date-named JPG files using ffmpeg.
 Input is the current directory, all JPG files are processed in order of filename alphabetically.
 It does not have any input parameters.
-Output are
-- two mp4 video files: video.mp4 in original resolution and video1080.mp4 scaled to 1080pixel vertical
-- one subtitle file containing time for each frame: subtitles.srt 
 
 
 ```yaml
@@ -47,10 +44,23 @@ exiftool '-FileName<${datetimeoriginal}${subsectimeoriginal}%-c.%e' -d %Y-%m-%d_
 The files may also be handled by enfuse beforehand, then the names are concatenated and longer
 `2021-05-17_00250543-2021-05-17_00250705.jpg`
 
+# Output files
 
-# Generated Subtitles
-assuming 25fps
-each frame is therefore 0.04 sec
+The script will generate three output files
+
+```
+video.mp4
+video1080.mp4
+subtitles.srt
+```
+
+## Videos
+
+The two video files are: `video.mp4` in original resolution and `video1080.mp4` scaled to 1080 pixel vertical resolution.
+
+## Subtitles
+
+The subtitle file `subtitles.srt` stores the date and time of each frame as subtitle of length 0.04 seconds. That is 25 frames per second. These are intended as meta-data for further post-processing.
 
 Example of a block of the resulting SRT:
 ```srt
