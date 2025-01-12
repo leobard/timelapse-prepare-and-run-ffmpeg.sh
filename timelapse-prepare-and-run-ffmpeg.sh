@@ -7,6 +7,8 @@ It does not have any input parameters.
 Output are
 - two mp4 video files: video.mp4 in original resolution and video1080.mp4 scaled to 1080pixel vertical
 - one subtitle file containing time for each frame: subtitles.srt 
+- each input photo is turned into one frame of the output video
+- output video has 25 frames per second
 
 
 ```yaml
@@ -39,6 +41,9 @@ How to rename a directory of photos from `IMG001.JPG` to above:
 cmd.exe version:
 ```cmd.exe
 exiftool "-FileName<${datetimeoriginal}${subsectimeoriginal}%-c.%e" -d %Y-%m-%d_%H%M%S . 
+
+# alternative
+exiftool "-FileName<${datetimeoriginal}%-c.%e" -d %Y-%m-%d_%H%M%S .
 ```
 
 bash version:
